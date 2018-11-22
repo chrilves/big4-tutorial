@@ -40,53 +40,7 @@ Inductive LE : nat -> nat -> Prop :=
   | LENext: forall {a b: nat}, LE a b -> LE a (S b)
 .
 
-Definition idLE: forall {o: nat}, LE o o := @LERefl.
-
-Fixpoint composeLE {a b c: nat} (f: LE a b) (g: LE b c) {struct g}: LE a c :=
-  match g in LE x y return (LE a x -> LE a y) with
-    | LERefl    => fun f0: LE a _ => f0
-    | LENext hr => fun f0: LE a _ => LENext (composeLE f0 hr)
-  end f
-.
-
-Definition neutralRightLE {a b: nat} (f: LE a b): composeLE f idLE = f := eq_refl.
-
-Definition leibniz {a b: Type} {x y: a} (p: x = y) (f: a -> b): f x = f y :=
-  match p with
-    | eq_refl => eq_refl
-  end
-.
-
-Fixpoint neutralLeftLE {a b: nat} (f: LE a b): composeLE idLE f = f :=
-  match f with
-    | LERefl   => eq_refl
-    | LENext h => let hr := neutralLeftLE h
-                  in leibniz hr LENext
-  end
-.
-
-Fixpoint associativityLE
-    {a b c d: nat} (f: LE a b) (g: LE b c) (h: LE c d) :
-    composeLE (composeLE f g) h = composeLE f (composeLE g h)
-  :=
-  match h as h' in LE c' d'
-          return  (forall {a' b': nat} (f': LE a' b') (g': LE b' c'),
-                     composeLE (composeLE f' g') h' = composeLE f' (composeLE g' h')
-                  )
-          with
-    | LERefl => fun {a' b': nat} (f': LE a' b') (g': LE b' _) => eq_refl
-    | LENext p => fun {a' b': nat} (f': LE a' b') (g': LE b' _) =>
-                    let HR := associativityLE f' g' p
-                    in leibniz HR LENext
-  end a b f g
-.
-
 (* Taking naturals as objects and `LE` as arrows,
    this actually forms a category! *)
-Definition natPoset: Cat nat LE :=
-  MkCat (@LERefl)
-        (@composeLE)
-        (@neutralLeftLE)
-        (@neutralRightLE)
-        (@associativityLE)
+Definition natPoset: Cat nat LE := ???
 .

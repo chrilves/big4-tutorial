@@ -45,40 +45,7 @@ data LE : Nat -> Nat -> Set where
   LERefl : {n : Nat} -> LE n n
   LENext : {n m : Nat} -> LE n m -> LE n (suc m)
 
-{- Useful :) -}
-leibniz : {a b : Set} -> {x y : a} ->
-          x ≡ y -> (f : a -> b) ->
-          f x ≡ f y
-leibniz refl _ = refl
-
-
 {- Taking naturals as objects and `LE` as arrows,
    this actually forms a category! -}
 natPoset : Cat Nat LE
-natPoset = MkCat id'
-                 compose'
-                 neutralLeft'
-                 neutralRight'
-                 associativity'
-  where
-    id' : {n : Nat} -> LE n n
-    id' = LERefl
-
-    compose' : {n m p : Nat} -> LE n m -> LE m p -> LE n p
-    compose' f  LERefl    = f
-    compose' f (LENext h) = LENext (compose' f h)
-
-    neutralLeft' : {n m : Nat} -> (f : LE n m) -> compose' id' f ≡ f
-    neutralLeft'  LERefl = refl
-    neutralLeft' (LENext h) = let hr = neutralLeft' h
-                              in leibniz hr LENext
-
-    neutralRight' : {n m : Nat} -> (f : LE n m) -> compose' f id' ≡ f
-    neutralRight' f = refl
-
-    associativity' : {a b c d : Nat} ->
-                     (f : LE a b) -> (g : LE b c) -> (h : LE c d) ->
-                     compose' f (compose' g h) ≡ compose' (compose' f g) h
-    associativity' f g  LERefl = refl
-    associativity' f g (LENext x) = let hr = associativity' f g x
-                                    in leibniz hr LENext
+natPoset = ???

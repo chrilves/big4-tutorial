@@ -40,26 +40,7 @@ data LE : Nat -> Nat -> Type where
   LERefl : {o: Nat} -> LE o o
   LENext : {a, b: Nat} -> LE a b -> LE a (S b)
 
-{- Useful :) -}
-leibniz: {a, b: Type} -> {x, y: a} ->
-         x = y -> (f: a -> b) ->
-         f x = f y
-leibniz Refl _ = Refl
-
 {- Taking naturals as objects and `LE` as arrows,
    this actually forms a category! -}
 [natPoset] Cat Nat LE where
-    id = LERefl
-
-    compose f  LERefl    = f
-    compose f (LENext h) = LENext (compose @{natPoset} f h)
-
-    neutralLeft  LERefl = Refl
-    neutralLeft (LENext h) = let hr = neutralLeft @{natPoset} h
-                             in leibniz hr LENext
-
-    neutralRight f = Refl
-
-    associativity f g  LERefl = Refl
-    associativity f g (LENext x) = let hr = associativity @{natPoset} f g x
-                                   in leibniz hr LENext
+  ???
